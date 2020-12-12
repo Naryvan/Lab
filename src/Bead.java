@@ -10,7 +10,7 @@ public class Bead extends ArkanoidObject {
 	private int currentAngle;
 	private int deltaX; // speed of the bead relatively to the X axis (left to right)
 	private int deltaY; // speed of the bead relatively to the Y axis (up to down)
-	private final int COLLISIONS_DETECTION_PRECISION = 20; // represents the number of points which will be 
+	private final int COLLISIONS_DETECTION_PRECISION = 60; // represents the number of points which will be 
 	// considered while detecting collisions with other objects. SHOULD BE A DIVISOR OF 360
 	private boolean didLoose = false;
 	private Arkanoid window;
@@ -93,14 +93,15 @@ public class Bead extends ArkanoidObject {
 				collidesWidthVerticalBound = true;
 			}
 		}
-		/*if (collidesWidthHorizontalBound && collidesWidthVerticalBound) {
-			int temp = deltaX;
-			deltaX = -deltaY;
-			deltaY = -temp;*/
-		if (collidesWidthHorizontalBound) {
-			deltaY = -deltaY;
-		} else if (collidesWidthVerticalBound) {
+//		if (collidesWidthHorizontalBound && collidesWidthVerticalBound) {
+//			int temp = deltaX;
+//			deltaX = -deltaY;
+//			deltaY = -temp;
+//		}
+		if (collidesWidthVerticalBound) {
 			deltaX = -deltaX;
+		} else if (collidesWidthHorizontalBound) {
+			deltaY = -deltaY;
 		}
 	}
 	

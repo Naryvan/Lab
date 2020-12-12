@@ -72,7 +72,7 @@ public class Arkanoid extends GraphicsProgram {
 	private void checkForCollisions() {
 		bead.bounceFromPaddleIfCollides(paddle);
 		
-		ArkanoidObject collidedObject = bead.collidesWith();
+		ArkanoidObject collidedObject = (ArkanoidObject) bead.collidesWith();
 		if(collidedObject != null && collidedObject.getType() == BLOCK) {
 			switch(collidedObject.getType()) {
 			case PADDLE:
@@ -82,6 +82,7 @@ public class Arkanoid extends GraphicsProgram {
 				bead.bounceFromRectangle(((Block)collidedObject).getRect());
 				remove(collidedObject);
 				blocksCount--;
+				System.out.println(blocksCount);
 				return;
 			case BONUS:
 				break;
