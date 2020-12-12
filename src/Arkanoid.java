@@ -42,7 +42,7 @@ public class Arkanoid extends GraphicsProgram {
 	//Radius of bead
 	private static final int BEAD_RADIUS = 10;
 
-	private static final int DELAY = 1;
+	private static final int DELAY = 5;
 	
 	
 	private Bead bead;
@@ -58,8 +58,8 @@ public class Arkanoid extends GraphicsProgram {
 	
 	public void init() {
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		//addBead();
 		addBlocks();
-		addBead();
 		addPaddle();
 		addMouseListeners();
 		gameState = START;
@@ -73,7 +73,11 @@ public class Arkanoid extends GraphicsProgram {
 				if(bead != null) {
 					bead.moveBead();
 					checkForCollisions();
-				}		
+				}
+				else if(livesCount != 0) {
+					addBead();
+					gameState = BEAD_APPEARED;
+				}
 			}		
 			pause(DELAY);		
 		}
@@ -82,6 +86,7 @@ public class Arkanoid extends GraphicsProgram {
 	public void mouseClicked(MouseEvent e) {
 		if(gameState == START) {
 			remove(startWindow);
+			addBead();
 			gameState = BEAD_APPEARED;
 			return;
 		}
@@ -101,19 +106,12 @@ public class Arkanoid extends GraphicsProgram {
 		
 		ArkanoidObject collidedObject = bead.collidesWith();
 		if(collidedObject != null && collidedObject.getType() == BLOCK) {
-			switch(collidedObject.getType()) {
-			case PADDLE:
-				//bead.bounceFromPaddleIfCollides(paddle);
-				break;
-			case BLOCK:
-				bead.bounceFromRectangle(((Block)collidedObject).getRect());
-				remove(collidedObject);
-				blocksCount--;
-				return;
-			case BONUS:
-				break;
-			}
+			bead.bounceFromRectangle(((Block)collidedObject).getRect());
+			remove(collidedObject);
+			blocksCount--;
+			return;
 		}
+		
 		bead.bounceIfCollidesWithWorldBounds();
 	}
 	
@@ -125,6 +123,7 @@ public class Arkanoid extends GraphicsProgram {
 	public void addBead() {
 		bead = new Bead(WINDOW_WIDTH / 2 - BEAD_RADIUS, WINDOW_HEIGHT / 2 - BEAD_RADIUS, BEAD_RADIUS, this);
 		add(bead);
+		bead.sendToBack();
 	}
 	
 	private void addBlocks() {
@@ -144,7 +143,8 @@ public class Arkanoid extends GraphicsProgram {
 	
 	public void processGameOver() {
 		remove(bead);
-		bead = null;	
+		bead = null;
+		livesCount--;
 	}
 	
 }

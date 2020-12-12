@@ -18,10 +18,10 @@ public class Bead extends ArkanoidObject {
 	private final int WORLD_WIDHT;
 	private final int WORLD_HEIGHT;
 	
-	private final static int DELTA_X_LOWER_BOUND = 1;
-	private final static int DELTA_X_UPPER_BOUND = 1;
-	private final static int DELTA_Y_LOWER_BOUND = 1;
-	private final static int DELTA_Y_UPPER_BOUND = 1;
+	private final static int DELTA_X_LOWER_BOUND = 3;
+	private final static int DELTA_X_UPPER_BOUND = 4;
+	private final static int DELTA_Y_LOWER_BOUND = 3;
+	private final static int DELTA_Y_UPPER_BOUND = 4;
 
 	public Bead(int xCoord, int yCoord, int radius, Arkanoid window) {
 		super(Arkanoid.BEAD);
