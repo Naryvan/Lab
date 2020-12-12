@@ -1,0 +1,6 @@
+bin/Arkanoid.class
+bin/ArkanoidObject.class
+bin/Bead.class
+bin/Block.class
+bin/Paddle.class
+bin/java.policy.applet
