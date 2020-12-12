@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.Random;
 import javax.xml.crypto.XMLCryptoContext;
 import acm.graphics.*;
@@ -27,6 +28,8 @@ public class Bead extends GOval {
 		this.window = window;
 		this.WORLD_WIDHT = window.getWidth();
 		this.WORLD_HEIGHT = window.getHeight();
+		this.setFilled(true);
+		this.setFillColor(new Color(26, 10, 51));
 		RandomGenerator gen = RandomGenerator.getInstance();
 		deltaX = gen.nextInt(DELTA_X_LOWER_BOUND, DELTA_X_UPPER_BOUND) * (gen.nextBoolean() ? (-1) : 1);
 		// deltaX might be negative, but its absolute value remains in range of defined constants

@@ -34,9 +34,9 @@ public class Arkanoid extends GraphicsProgram {
 	private static final int BRICK_Y_OFFSET = 70;
 	
 	//Radius of bead
-	private static final int BEAD_RADIUS = 5;
+	private static final int BEAD_RADIUS = 10;
 
-	private static final int DELAY = 100;
+	private static final int DELAY = 30;
 	
 	
 	private Bead bead;
@@ -56,9 +56,10 @@ public class Arkanoid extends GraphicsProgram {
 	
 	public void run() {
 		while(true) {
-			//checkForCollisions();
-			//checkWinConditions();
-			//pause(DELAY);
+			bead.moveBead();
+			bead.bounceIfCollidesWithWorldBounds();
+			bead.bounceFromPaddleIfCollides(paddle);
+			pause(DELAY);
 		}
 	}
 	

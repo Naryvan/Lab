@@ -5,3 +5,4 @@ bin/Block.class
 bin/Paddle.class
 bin/java.policy.applet
 bin/*.class
+/bin/
