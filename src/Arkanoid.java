@@ -30,17 +30,21 @@ public class Arkanoid extends GraphicsProgram {
 	
 	//Number of bricks
 	private static final int BRICKS_PER_ROW = 8;
-	private static final int BRICK_ROWS = 12;
+	private static final int BRICK_ROWS = 10;
 	
 	//Bricks dimensions
-	private static final int BRICK_WIDTH = 50;
-	private static final int BRICK_HEIGHT = 20;
+	private static final int BRICK_WIDTH = WINDOW_WIDTH / (BRICK_ROWS + 2);
+	private static final int BRICK_HEIGHT = WINDOW_HEIGHT / BRICK_ROWS / 4;
+	
+	//private static final int BRICK_X_DISTANCE = 
 	
 	//Distance top brick row and top edge of window
 	private static final int BRICK_Y_OFFSET = 70;
 	
+	private static final int BRICK_X_OFFSET = BRICK_WIDTH;
+	
 	//Radius of bead
-	private static final int BEAD_RADIUS = 10;
+	private static final int BEAD_RADIUS = 7;
 
 	private static final int DELAY = 5;
 	
@@ -58,7 +62,6 @@ public class Arkanoid extends GraphicsProgram {
 	
 	public void init() {
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		//addBead();
 		addBlocks();
 		addPaddle();
 		addMouseListeners();
@@ -107,8 +110,10 @@ public class Arkanoid extends GraphicsProgram {
 		ArkanoidObject collidedObject = bead.collidesWith();
 		if(collidedObject != null && collidedObject.getType() == BLOCK) {
 			bead.bounceFromRectangle(((Block)collidedObject).getRect());
-			remove(collidedObject);
-			blocksCount--;
+			if(((Block)collidedObject).tryToDestroy()) {
+				remove(collidedObject);
+				blocksCount--;
+			}
 			return;
 		}
 		
@@ -130,9 +135,11 @@ public class Arkanoid extends GraphicsProgram {
 		blocksCount = 0;
 		for(int i = 0; i < BRICK_ROWS; i++) {
 			for(int j = 0; j < BRICKS_PER_ROW; j++) {
-				add(new Block(BRICK_WIDTH, BRICK_HEIGHT), i * BRICK_WIDTH, BRICK_Y_OFFSET + j * BRICK_HEIGHT);
+				add(new Block(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET + i * BRICK_WIDTH, BRICK_Y_OFFSET + j * BRICK_HEIGHT);
 				blocksCount++;
 			}
+			add(new ArmoredBlock(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET + i * BRICK_WIDTH, BRICK_Y_OFFSET + BRICKS_PER_ROW * BRICK_HEIGHT);
+			blocksCount++;
 		}
 	}
 	
