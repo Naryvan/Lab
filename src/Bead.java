@@ -13,7 +13,7 @@ public class Bead extends GOval {
 	private final int COLLISIONS_DETECTION_PRECISION = 20; // represents the number of points which will be 
 	// considered while detecting collisions with other objects. SHOULD BE A DIVISOR OF 360
 	private boolean didLoose = false;
-	private GraphicsProgram window;
+	private Arkanoid window;
 	
 	private final int WORLD_WIDHT;
 	private final int WORLD_HEIGHT;
@@ -23,7 +23,7 @@ public class Bead extends GOval {
 	private final static int DELTA_Y_LOWER_BOUND = 2;
 	private final static int DELTA_Y_UPPER_BOUND = 5;
 
-	public Bead(int xCoord, int yCoord, int radius, GraphicsProgram window) {
+	public Bead(int xCoord, int yCoord, int radius, Arkanoid window) {
 		super(xCoord, yCoord, radius * 2, radius * 2);
 		this.window = window;
 		this.WORLD_WIDHT = window.getWidth();
@@ -109,7 +109,7 @@ public class Bead extends GOval {
 			deltaY = -deltaY;
 		}
 		if (getY() + getHeight() > WORLD_HEIGHT) {
-			didLoose = true;
+			window.processGameOver();
 		}
 	}
 	

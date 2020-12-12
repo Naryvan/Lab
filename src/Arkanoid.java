@@ -106,6 +106,9 @@ public class Arkanoid extends GraphicsProgram {
 		}
 	}
 	
+	public void processGameOver() {
+		// TODO
+	}
 	//private void 
 	
 }
