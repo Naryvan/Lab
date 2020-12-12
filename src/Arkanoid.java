@@ -11,6 +11,11 @@ public class Arkanoid extends GraphicsProgram {
 	public static final int BONUS = 3;
 	public static final int BEAD = 4;
 	
+	public static final int START = 1;
+	public static final int BEAD_APPEARED = 2;
+	public static final int BEAD_MOVES = 3;
+	public static final int END_SCREEN = 4;
+	
 	
 	//Window dimensions
 	public static final int WINDOW_WIDTH = 600;
@@ -35,7 +40,7 @@ public class Arkanoid extends GraphicsProgram {
 	private static final int BRICK_Y_OFFSET = 70;
 	
 	//Radius of bead
-	private static final int BEAD_RADIUS = 5;
+	private static final int BEAD_RADIUS = 10;
 
 	private static final int DELAY = 5;
 	
@@ -44,29 +49,56 @@ public class Arkanoid extends GraphicsProgram {
 	
 	private Paddle paddle;
 	
+	private GCompound startWindow;
+	
 	private int blocksCount;
 	private int livesCount;
 	
+	private int gameState;
+	
 	public void init() {
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		//addBead();
 		addBlocks();
-		addBead();
 		addPaddle();
 		addMouseListeners();
+		gameState = START;
+		livesCount = 3;
+		showStartScreen();
 	}
 	
 	public void run() {
 		while(true) {
-			checkForCollisions();
-			bead.moveBead();
-			//bead.bounceIfCollidesWithWorldBounds();
-			pause(DELAY);
-			
+			if(gameState == BEAD_MOVES) {
+				if(bead != null) {
+					bead.moveBead();
+					checkForCollisions();
+				}
+				else if(livesCount != 0) {
+					addBead();
+					gameState = BEAD_APPEARED;
+				}
+			}		
+			pause(DELAY);		
+		}
+	}
+	
+	public void mouseClicked(MouseEvent e) {
+		if(gameState == START) {
+			remove(startWindow);
+			addBead();
+			gameState = BEAD_APPEARED;
+			return;
+		}
+		if(gameState == BEAD_APPEARED) {
+			gameState = BEAD_MOVES;
 		}
 	}
 	
 	public void mouseMoved(MouseEvent e) {
-		paddle.movePaddle(e);
+		if(gameState == BEAD_APPEARED || gameState == BEAD_MOVES) {
+			paddle.movePaddle(e);
+		}
 	}
 	
 	private void checkForCollisions() {
@@ -76,21 +108,13 @@ public class Arkanoid extends GraphicsProgram {
 			return;
 		ArkanoidObject collidedObject = (ArkanoidObject) bead.collidesWith();
 		if(collidedObject != null && collidedObject.getType() == BLOCK) {
-			switch(collidedObject.getType()) {
-			case PADDLE:
-				//bead.bounceFromPaddleIfCollides(paddle);
-				break;
-			case BLOCK:
-				bead.bounceFromRectangle(((Block)collidedObject).getRect());
-				remove(collidedObject);
-				blocksCount--;
-				System.out.println(blocksCount);
-				return;
-			case BONUS:
-				break;
-			}
+			bead.bounceFromRectangle(((Block)collidedObject).getRect());
+			remove(collidedObject);
+			blocksCount--;
+			return;
 		}
 		
+		bead.bounceIfCollidesWithWorldBounds();
 	}
 	
 	private void addPaddle() {
@@ -101,6 +125,7 @@ public class Arkanoid extends GraphicsProgram {
 	public void addBead() {
 		bead = new Bead(WINDOW_WIDTH / 2 - BEAD_RADIUS, WINDOW_HEIGHT / 2 - BEAD_RADIUS, BEAD_RADIUS, this);
 		add(bead);
+		bead.sendToBack();
 	}
 	
 	private void addBlocks() {
@@ -113,8 +138,15 @@ public class Arkanoid extends GraphicsProgram {
 		}
 	}
 	
+	private void showStartScreen() {
+		startWindow = new StartWindow(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 3, WINDOW_WIDTH / 4, WINDOW_HEIGHT / 3);
+		add(startWindow);
+	}
+	
 	public void processGameOver() {
-		// TODO
+		remove(bead);
+		bead = null;
+		livesCount--;
 	}
 	
 }
