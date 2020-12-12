@@ -49,7 +49,7 @@ public class Bead extends GOval {
 			int currentXprocessed = (int)(GMath.cosDegrees(currentAngleProcessed) * getWidth() / 2);
 			int currentYprocessed = -(int)(GMath.sinDegrees(currentAngleProcessed) * getHeight() / 2);
 			// minus here because of Y-inverted java coordinates system
-			if (anotherObject.contains(xCenter + currentXprocessed, yCenter + currentYprocessed))
+			if (window.getElementAt(xCenter + currentXprocessed, yCenter + currentYprocessed) == anotherObject)
 				return true;
 		}
 		return false;
