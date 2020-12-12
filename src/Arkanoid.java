@@ -37,7 +37,7 @@ public class Arkanoid extends GraphicsProgram {
 	//Radius of bead
 	private static final int BEAD_RADIUS = 5;
 
-	private static final int DELAY = 1;
+	private static final int DELAY = 5;
 	
 	
 	private Bead bead;
@@ -70,8 +70,10 @@ public class Arkanoid extends GraphicsProgram {
 	}
 	
 	private void checkForCollisions() {
-		bead.bounceFromPaddleIfCollides(paddle);
-		
+		if (bead.bounceFromPaddleIfCollides(paddle))
+			return;
+		if (bead.bounceIfCollidesWithWorldBounds())
+			return;
 		ArkanoidObject collidedObject = (ArkanoidObject) bead.collidesWith();
 		if(collidedObject != null && collidedObject.getType() == BLOCK) {
 			switch(collidedObject.getType()) {
@@ -88,7 +90,7 @@ public class Arkanoid extends GraphicsProgram {
 				break;
 			}
 		}
-		bead.bounceIfCollidesWithWorldBounds();
+		
 	}
 	
 	private void addPaddle() {
