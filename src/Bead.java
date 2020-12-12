@@ -58,7 +58,7 @@ public class Bead extends ArkanoidObject {
 		return false;
 	}
 	
-	public GObject collidesWith() {
+	public ArkanoidObject collidesWith() {
 		int xCenter = ((int)getX() + (int)(getWidth() / 2));
 		int yCenter = ((int)getY() + (int)(getHeight() / 2));
 		
@@ -70,7 +70,7 @@ public class Bead extends ArkanoidObject {
 			GObject objectCollided = window.getElementAt(xCenter + currentXprocessed + 1,
 					yCenter + currentYprocessed + 1);
 			if (objectCollided != null)
-				return objectCollided;
+				return (ArkanoidObject)objectCollided;
 		}
 		
 		return null;
