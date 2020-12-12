@@ -8,20 +8,18 @@ import acm.util.RandomGenerator;
 public class Bead extends ArkanoidObject {
 	
 	private int currentAngle;
-	private int deltaX; // speed of the bead relatively to the X axis (left to right)
-	private int deltaY; // speed of the bead relatively to the Y axis (up to down)
-	private final int COLLISIONS_DETECTION_PRECISION = 20; // represents the number of points which will be 
+	private double speedModulus;
+	private double deltaX; // speed of the bead relatively to the X axis (left to right)
+	private double deltaY; // speed of the bead relatively to the Y axis (up to down)
+	private final int COLLISIONS_DETECTION_PRECISION = 60; // represents the number of points which will be 
 	// considered while detecting collisions with other objects. SHOULD BE A DIVISOR OF 360
-	private boolean didLoose = false;
 	private Arkanoid window;
 	
 	private final int WORLD_WIDHT;
 	private final int WORLD_HEIGHT;
 	
-	private final static int DELTA_X_LOWER_BOUND = 3;
-	private final static int DELTA_X_UPPER_BOUND = 4;
-	private final static int DELTA_Y_LOWER_BOUND = 3;
-	private final static int DELTA_Y_UPPER_BOUND = 4;
+	private final static int SPEED_MODULUS_LOWER_BOUND = 2;
+	private final static int SPEED_MODULUS_UPPER_BOUND = 3;
 
 	public Bead(int xCoord, int yCoord, int radius, Arkanoid window) {
 		super(Arkanoid.BEAD);
@@ -33,14 +31,13 @@ public class Bead extends ArkanoidObject {
 		bead.setFillColor(new Color(26, 10, 51));
 		add(bead);
 		RandomGenerator gen = RandomGenerator.getInstance();
-		deltaX = gen.nextInt(DELTA_X_LOWER_BOUND, DELTA_X_UPPER_BOUND) * (gen.nextBoolean() ? (-1) : 1);
-		// deltaX might be negative, but its absolute value remains in range of defined constants
-		deltaY = gen.nextInt(DELTA_Y_LOWER_BOUND, DELTA_Y_UPPER_BOUND);
+		speedModulus = gen.nextInt(SPEED_MODULUS_LOWER_BOUND, SPEED_MODULUS_UPPER_BOUND);
+		currentAngle = (gen.nextInt(-135, -45));
 		this.setLocation(xCoord, yCoord);
 	}
 	
 	public void moveBead() {
-		this.move(deltaX, deltaY);
+		this.movePolar(speedModulus, currentAngle);
 	}
 	
 	public boolean collidesWith(GObject anotherObject) {
@@ -77,7 +74,7 @@ public class Bead extends ArkanoidObject {
 	}
 	
 	
-	public void bounceFromRectangle(GRect rect) {
+	public boolean bounceFromRectangle(GRect rect) {
 		boolean collidesWidthHorizontalBound = false;
 		boolean collidesWidthVerticalBound = false;
 		
@@ -93,35 +90,47 @@ public class Bead extends ArkanoidObject {
 				collidesWidthVerticalBound = true;
 			}
 		}
-		/*if (collidesWidthHorizontalBound && collidesWidthVerticalBound) {
-			int temp = deltaX;
-			deltaX = -deltaY;
-			deltaY = -temp;*/
-		if (collidesWidthHorizontalBound) {
-			deltaY = -deltaY;
-		} else if (collidesWidthVerticalBound) {
-			deltaX = -deltaX;
-		}
+		
+		if (collidesWidthVerticalBound) {
+			currentAngle = currentAngle > 0 ? 180 - currentAngle : -180 - currentAngle;
+		} else if (collidesWidthHorizontalBound) {
+			currentAngle = -currentAngle;
+			return true;
+		}  
+		return false;
 	}
 	
-	public void bounceIfCollidesWithWorldBounds() {
+	public boolean bounceIfCollidesWithWorldBounds() {
 		if (getX() + getWidth() > WORLD_WIDHT || getX() < 0) {
-			deltaX = -deltaX;
-			return;
+			currentAngle = currentAngle > 0 ? 180 - currentAngle : -180 - currentAngle;
+			return true;
 		}
 		if (getY() < 0){
-			deltaY = -deltaY;
-			return;
+			currentAngle = -currentAngle;
+			return true;
 		}
 		if (getY() + getHeight() > WORLD_HEIGHT) {
 			window.processGameOver();
-			return;
+			return true;
 		}
+		return false;
 	}
 	
-	public void bounceFromPaddleIfCollides(Paddle paddle) {
+	public boolean bounceFromPaddleIfCollides(Paddle paddle) {
+		int width = (int)paddle.getWidth();
 		if (this.collidesWith(paddle)) {
-			deltaY = - deltaY;
+			for (int i = 1; i <= 6; i++) {
+				for (int j = ((int)(width / 6)) * (i - 1); j < ((int)(width / 6)) * i; j++) {
+					if (this.contains(paddle.getX() + j, paddle.getY()) || 
+							this.contains(paddle.getX() + j, (int)(paddle.getY() + paddle.getHeight() / 2))
+							|| this.contains(paddle.getX() + j, (int)(paddle.getY() + paddle.getHeight()))) {
+						currentAngle = 160 - (20 * i);
+						return true;
+					}
+				}
+			}
 		}
+		return false;
 	}
+
 }

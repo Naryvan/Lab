@@ -105,9 +105,11 @@ public class Arkanoid extends GraphicsProgram {
 	}
 	
 	private void checkForCollisions() {
-		bead.bounceFromPaddleIfCollides(paddle);
-		
-		ArkanoidObject collidedObject = bead.collidesWith();
+		if (bead.bounceFromPaddleIfCollides(paddle))
+			return;
+		if (bead.bounceIfCollidesWithWorldBounds())
+			return;
+		ArkanoidObject collidedObject = (ArkanoidObject) bead.collidesWith();
 		if(collidedObject != null && collidedObject.getType() == BLOCK) {
 			bead.bounceFromRectangle(((Block)collidedObject).getRect());
 			if(((Block)collidedObject).tryToDestroy()) {
