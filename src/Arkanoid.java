@@ -61,6 +61,7 @@ public class Arkanoid extends GraphicsProgram {
 			bead.moveBead();
 			//bead.bounceIfCollidesWithWorldBounds();
 			pause(DELAY);
+			
 		}
 	}
 	
@@ -112,6 +113,5 @@ public class Arkanoid extends GraphicsProgram {
 	public void processGameOver() {
 		// TODO
 	}
-	//private void 
 	
 }
