@@ -11,6 +11,11 @@ public class Arkanoid extends GraphicsProgram {
 	public static final int BONUS = 3;
 	public static final int BEAD = 4;
 	
+	public static final int START = 1;
+	public static final int BEAD_APPEARED = 2;
+	public static final int BEAD_MOVES = 3;
+	public static final int END_SCREEN = 4;
+	
 	
 	//Window dimensions
 	public static final int WINDOW_WIDTH = 600;
@@ -35,7 +40,7 @@ public class Arkanoid extends GraphicsProgram {
 	private static final int BRICK_Y_OFFSET = 70;
 	
 	//Radius of bead
-	private static final int BEAD_RADIUS = 5;
+	private static final int BEAD_RADIUS = 10;
 
 	private static final int DELAY = 1;
 	
@@ -44,8 +49,12 @@ public class Arkanoid extends GraphicsProgram {
 	
 	private Paddle paddle;
 	
+	private GCompound startWindow;
+	
 	private int blocksCount;
 	private int livesCount;
+	
+	private int gameState;
 	
 	public void init() {
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -53,20 +62,38 @@ public class Arkanoid extends GraphicsProgram {
 		addBead();
 		addPaddle();
 		addMouseListeners();
+		gameState = START;
+		livesCount = 3;
+		showStartScreen();
 	}
 	
 	public void run() {
 		while(true) {
-			checkForCollisions();
-			bead.moveBead();
-			//bead.bounceIfCollidesWithWorldBounds();
-			pause(DELAY);
-			
+			if(gameState == BEAD_MOVES) {
+				if(bead != null) {
+					bead.moveBead();
+					checkForCollisions();
+				}		
+			}		
+			pause(DELAY);		
+		}
+	}
+	
+	public void mouseClicked(MouseEvent e) {
+		if(gameState == START) {
+			remove(startWindow);
+			gameState = BEAD_APPEARED;
+			return;
+		}
+		if(gameState == BEAD_APPEARED) {
+			gameState = BEAD_MOVES;
 		}
 	}
 	
 	public void mouseMoved(MouseEvent e) {
-		paddle.movePaddle(e);
+		if(gameState == BEAD_APPEARED || gameState == BEAD_MOVES) {
+			paddle.movePaddle(e);
+		}
 	}
 	
 	private void checkForCollisions() {
@@ -110,8 +137,14 @@ public class Arkanoid extends GraphicsProgram {
 		}
 	}
 	
+	private void showStartScreen() {
+		startWindow = new StartWindow(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 3, WINDOW_WIDTH / 4, WINDOW_HEIGHT / 3);
+		add(startWindow);
+	}
+	
 	public void processGameOver() {
-		// TODO
+		remove(bead);
+		bead = null;	
 	}
 	
 }
