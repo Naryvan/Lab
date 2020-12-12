@@ -5,11 +5,16 @@ public class Block extends ArkanoidObject {
 	
 	private static int colorIndex = 1;
 	
-	private GRect block;
+	private GRoundRect block;
+	
+	private int width;
+	private int height;
 	
 	public Block(int width, int height) {
 		super(Arkanoid.BLOCK);
-		block = new GRect(width, height);
+		this.width = width;
+		this.height = height;
+		block = new GRoundRect(0, 0, width, height, 5);
 		block.setFilled(true);
 		block.setFillColor(getNextColor());
 		add(block);
@@ -17,7 +22,7 @@ public class Block extends ArkanoidObject {
 	
 	public Block(int width, int height, Color color) {
 		super(Arkanoid.BLOCK);
-		block = new GRect(width, height);
+		block = new GRoundRect(width, height);
 		block.setFilled(true);
 		block.setFillColor(color);
 		add(block);
@@ -53,9 +58,9 @@ public class Block extends ArkanoidObject {
 	}
 	
 	public GRect getRect() {
-		return block;
-	}
-	
-	
+		GRect rect = new GRect(width, height, getX(), getY());
+		rect.setFilled(true);
+		return rect;
+	}	
 	
 }

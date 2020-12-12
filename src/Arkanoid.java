@@ -9,6 +9,7 @@ public class Arkanoid extends GraphicsProgram {
 	public static final int PADDLE = 1;
 	public static final int BLOCK = 2;
 	public static final int BONUS = 3;
+	public static final int BEAD = 4;
 	
 	
 	//Window dimensions
@@ -34,9 +35,9 @@ public class Arkanoid extends GraphicsProgram {
 	private static final int BRICK_Y_OFFSET = 70;
 	
 	//Radius of bead
-	private static final int BEAD_RADIUS = 10;
+	private static final int BEAD_RADIUS = 5;
 
-	private static final int DELAY = 30;
+	private static final int DELAY = 1;
 	
 	
 	private Bead bead;
@@ -56,9 +57,9 @@ public class Arkanoid extends GraphicsProgram {
 	
 	public void run() {
 		while(true) {
+			checkForCollisions();
 			bead.moveBead();
-			bead.bounceIfCollidesWithWorldBounds();
-			bead.bounceFromPaddleIfCollides(paddle);
+			//bead.bounceIfCollidesWithWorldBounds();
 			pause(DELAY);
 		}
 	}
@@ -68,22 +69,24 @@ public class Arkanoid extends GraphicsProgram {
 	}
 	
 	private void checkForCollisions() {
-		bead.bounceIfCollidesWithWorldBounds();
+		bead.bounceFromPaddleIfCollides(paddle);
 		
 		ArkanoidObject collidedObject = bead.collidesWith();
-		if(collidedObject != null) {
+		if(collidedObject != null && collidedObject.getType() == BLOCK) {
 			switch(collidedObject.getType()) {
 			case PADDLE:
+				//bead.bounceFromPaddleIfCollides(paddle);
 				break;
 			case BLOCK:
 				bead.bounceFromRectangle(((Block)collidedObject).getRect());
 				remove(collidedObject);
 				blocksCount--;
-				break;
+				return;
 			case BONUS:
 				break;
 			}
 		}
+		bead.bounceIfCollidesWithWorldBounds();
 	}
 	
 	private void addPaddle() {

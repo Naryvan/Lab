@@ -5,7 +5,7 @@ import acm.graphics.*;
 import acm.program.GraphicsProgram;
 import acm.util.RandomGenerator;
 
-public class Bead extends GOval {
+public class Bead extends ArkanoidObject {
 	
 	private int currentAngle;
 	private int deltaX; // speed of the bead relatively to the X axis (left to right)
@@ -18,22 +18,25 @@ public class Bead extends GOval {
 	private final int WORLD_WIDHT;
 	private final int WORLD_HEIGHT;
 	
-	private final static int DELTA_X_LOWER_BOUND = 2;
-	private final static int DELTA_X_UPPER_BOUND = 5;
-	private final static int DELTA_Y_LOWER_BOUND = 2;
-	private final static int DELTA_Y_UPPER_BOUND = 5;
+	private final static int DELTA_X_LOWER_BOUND = 1;
+	private final static int DELTA_X_UPPER_BOUND = 1;
+	private final static int DELTA_Y_LOWER_BOUND = 1;
+	private final static int DELTA_Y_UPPER_BOUND = 1;
 
 	public Bead(int xCoord, int yCoord, int radius, Arkanoid window) {
-		super(xCoord, yCoord, radius * 2, radius * 2);
+		super(Arkanoid.BEAD);
+		GOval bead = new GOval(radius * 2, radius * 2);
 		this.window = window;
 		this.WORLD_WIDHT = window.getWidth();
 		this.WORLD_HEIGHT = window.getHeight();
-		this.setFilled(true);
-		this.setFillColor(new Color(26, 10, 51));
+		bead.setFilled(true);
+		bead.setFillColor(new Color(26, 10, 51));
+		add(bead);
 		RandomGenerator gen = RandomGenerator.getInstance();
 		deltaX = gen.nextInt(DELTA_X_LOWER_BOUND, DELTA_X_UPPER_BOUND) * (gen.nextBoolean() ? (-1) : 1);
 		// deltaX might be negative, but its absolute value remains in range of defined constants
 		deltaY = gen.nextInt(DELTA_Y_LOWER_BOUND, DELTA_Y_UPPER_BOUND);
+		this.setLocation(xCoord, yCoord);
 	}
 	
 	public void moveBead() {
@@ -90,11 +93,11 @@ public class Bead extends GOval {
 				collidesWidthVerticalBound = true;
 			}
 		}
-		if (collidesWidthHorizontalBound && collidesWidthVerticalBound) {
+		/*if (collidesWidthHorizontalBound && collidesWidthVerticalBound) {
 			int temp = deltaX;
 			deltaX = -deltaY;
-			deltaY = -temp;
-		} else if (collidesWidthHorizontalBound) {
+			deltaY = -temp;*/
+		if (collidesWidthHorizontalBound) {
 			deltaY = -deltaY;
 		} else if (collidesWidthVerticalBound) {
 			deltaX = -deltaX;
@@ -104,12 +107,15 @@ public class Bead extends GOval {
 	public void bounceIfCollidesWithWorldBounds() {
 		if (getX() + getWidth() > WORLD_WIDHT || getX() < 0) {
 			deltaX = -deltaX;
+			return;
 		}
 		if (getY() < 0){
 			deltaY = -deltaY;
+			return;
 		}
 		if (getY() + getHeight() > WORLD_HEIGHT) {
 			window.processGameOver();
+			return;
 		}
 	}
 	
