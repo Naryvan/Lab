@@ -6,12 +6,12 @@ import acm.util.SoundClip;
 
 public class Bonus extends ArkanoidObject {
 
-	final double BONUS_PROBABILITY = 0.0003;
+	final double BONUS_PROBABILITY = 0.0001;
 	final int BONUS_FALLING_SPEED = 3;
 	private int radius;
 	public boolean bonusActive = false;
 	public boolean bonusFalling = false;
-	private GOval bonusBead;
+	public GOval bonusBead;
 	private Bead bead;
 	private Paddle paddle;
 	private BonusType bonusType;

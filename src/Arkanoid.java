@@ -53,12 +53,11 @@ public class Arkanoid extends GraphicsProgram {
 	/** Radius of bead */
 	private static final int BEAD_RADIUS = 7;
 
-<<<<<<< HEAD
+
 	private static final int BONUS_DURATION = 10;
-	
-=======
+
+
 	/** Delay between iterations */
->>>>>>> 102beb729eda11efe2d1b793ade81997e2827501
 	private static final int DELAY = 5;
 	
 	private static final int LEVELS_NUMBER = 3;
@@ -69,15 +68,11 @@ public class Arkanoid extends GraphicsProgram {
 	
 	/** Paddle that player controls */
 	private Paddle paddle;
-<<<<<<< HEAD
-	public HealthBar healthBar;
+
 	private Bonus bonus;
-=======
 	
 	/** Shows number of lives left */
-	private HealthBar healthBar;
->>>>>>> 102beb729eda11efe2d1b793ade81997e2827501
-	
+	public HealthBar healthBar;	
 	
 	/** Popup that shows game name and authors */
 	private GCompound startWindow;
@@ -161,7 +156,7 @@ public class Arkanoid extends GraphicsProgram {
 	}
 	
 	/**
-	 * Processes mouse movement, make paddle follor the mouse
+	 * Processes mouse movement, make paddle follow the mouse
 	 */
 	public void mouseMoved(MouseEvent e) {
 		if(gameState == BEAD_APPEARED || gameState == BEAD_MOVES) {
@@ -177,7 +172,7 @@ public class Arkanoid extends GraphicsProgram {
 			return;
 		if (bead.bounceIfCollidesWithWorldBounds())
 			return;
-		if (!(bead.collidesWith() instanceof Bonus)) {
+		if (bead.collidesWith() instanceof ArkanoidObject) {
 			ArkanoidObject collidedObject = (ArkanoidObject) bead.collidesWith();
 			if(collidedObject != null && collidedObject.getType() == BLOCK) {
 				bead.bounceFromRectangle(((Block)collidedObject).getRect());
@@ -298,7 +293,6 @@ public class Arkanoid extends GraphicsProgram {
 		add(healthBar);
 	}
 	
-<<<<<<< HEAD
 	private void addBonus() {
 		bonus = new Bonus(BEAD_RADIUS, paddle, bead, this);
 	}
@@ -330,13 +324,11 @@ public class Arkanoid extends GraphicsProgram {
 		return false;
 	}
 	
-=======
 	/**
 	 * Destoys block and checks for victory conditions
 	 * 
 	 * @param block - block to destroy
 	 */
->>>>>>> 102beb729eda11efe2d1b793ade81997e2827501
 	private void destroyBlock(ArkanoidObject block) {
 		remove(block);
 		blocksCount--;
@@ -378,6 +370,9 @@ public class Arkanoid extends GraphicsProgram {
 			playLose();
 			gameState = END_SCREEN;
 			showEndScreen("Ви програли!");
+		} else {
+			if (bonus.bonusBead != null)
+				remove(bonus.bonusBead);
 		}
 	}
 	

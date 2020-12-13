@@ -45,7 +45,7 @@ public class Block extends ArkanoidObject {
 	}
 	
 	/**
-	 * Returns next avalilable color
+	 * Returns next available color
 	 * Increases colorIndex by 1
 	 * 
 	 * @return next color

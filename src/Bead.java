@@ -16,21 +16,15 @@ public class Bead extends ArkanoidObject {
 	
 	/** Current direction of bead */
 	private int currentAngle;
-<<<<<<< HEAD
-	public double speedModulus = 4;
-	private final int COLLISIONS_DETECTION_PRECISION = 180; // represents the number of points which will be 
-	// considered while detecting collisions with other objects. SHOULD BE A DIVISOR OF 360
-=======
 	
 	/** Speed of the beed */
-	private double speedModulus;
+	public double speedModulus = 4;
 	
 	/** represents the number of points which will be 
         considered while detecting collisions with other objects. SHOULD BE A DIVISOR OF 360 */
 	private final int COLLISIONS_DETECTION_PRECISION = 180; 
 	
 	/** Game window */
->>>>>>> 102beb729eda11efe2d1b793ade81997e2827501
 	private Arkanoid window;
 	
 	/** Window dimensions */
@@ -52,7 +46,7 @@ public class Bead extends ArkanoidObject {
 	}
 	
 	/**
-	 * Moves bead accordint to its speed and angle
+	 * Moves bead according to its speed and angle
 	 */
 	public void moveBead() {
 		this.movePolar(speedModulus, currentAngle);

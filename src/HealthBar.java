@@ -16,7 +16,7 @@ public class HealthBar extends ArkanoidObject {
 	GOval thirdLife;
 	GOval bonusLife;
 	
-	/** Nummber of additional balls player has */
+	/** Number of additional balls player has */
 	int livesLeft;
 	
 	public HealthBar(int radius) {
@@ -41,7 +41,7 @@ public class HealthBar extends ArkanoidObject {
 	}
 	
 	/**
-	 * Decreases aditional balls by one
+	 * Decreases additional balls by one
 	 * If no balls left - returns true
 	 * 
 	 * @return true if no balls left, else false
@@ -71,57 +71,14 @@ public class HealthBar extends ArkanoidObject {
 			}
 		}
 	}
-	
-<<<<<<< HEAD
-//	public void addLife() {
-//		switch(livesLeft) {
-//		case 3:
-//			livesLeft++;
-//			add(bonusLife);
-//			return;
-//		case 2:
-//			livesLeft++;
-//			add(thirdLife);
-//			return;
-//		case 1:
-//			livesLeft++;
-//			add(secondLife);
-//			return;
-//		case 0:
-//			livesLeft++;
-//			add(firstLife);
-//		default:
-//			return;
-//		}
-//	}
-	
+		
 	public void addBonusLife(int radius) {
 		if (bonusLife == null) {
-=======
-	/**
-	 * Adds aditional ball, max - 4
-	 */
-	public void addLife() {
-		switch(livesLeft) {
-		case 3:
-			livesLeft++;
-			add(fourthLife);
-			return;
-		case 2:
-			livesLeft++;
-			add(thirdLife);
-			return;
-		case 1:
-			livesLeft++;
-			add(secondLife);
-			return;
-		case 0:
->>>>>>> 102beb729eda11efe2d1b793ade81997e2827501
-			livesLeft++;
 			bonusLife = new GOval(radius * 12, 0, radius * 2, radius * 2);
 			bonusLife.setFilled(true);
 			bonusLife.setFillColor(new Color(123, 0, 255));
 			add(bonusLife);
+			livesLeft++;
 		}
 	}
 	
