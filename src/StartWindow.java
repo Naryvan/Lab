@@ -1,3 +1,9 @@
+/*
+ * File: StartWindow
+ * 
+ * Window that shows information about game and its authors
+ */
+
 import java.awt.Color;
 import acm.graphics.*;
 

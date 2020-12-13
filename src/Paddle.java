@@ -1,14 +1,25 @@
+/*
+ * File: Paddle.java
+ * 
+ * Paddle that player controls
+ */
+
 import acm.graphics.*;
 import java.awt.Color;
 import java.awt.event.*;
 
 public class Paddle extends ArkanoidObject {
 
+	/** Visual parts of the paddle */
 	private GRect rectangle;
 	private GOval leftOval;
 	private GOval rightOval;
 	
+<<<<<<< HEAD
 	private final int INITIAL_WIDTH;
+=======
+	/** Paddle dimensions */
+>>>>>>> 102beb729eda11efe2d1b793ade81997e2827501
 	private int width;
 	private int height;
 	
@@ -35,6 +46,12 @@ public class Paddle extends ArkanoidObject {
 		add(rectangle);
 	}
 	
+	/**
+	 * Moves paddle to the location of mouse,
+	 * stops if out of bounds
+	 * 
+	 * @param e - mouse
+	 */
 	public void movePaddle(MouseEvent e) {
 		double xPos = e.getX() - width / 2;
 		

@@ -6,3 +6,4 @@ bin/Paddle.class
 bin/java.policy.applet
 bin/*.class
 /bin/
+doc/*

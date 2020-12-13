@@ -1,4 +1,10 @@
-import acm.graphics.GCompound;
+/*
+ * File: ArkanoidObject
+ * 
+ * Main class for all game objects
+ */
+
+import acm.graphics.*;
 
 public class ArkanoidObject extends GCompound {
 	
