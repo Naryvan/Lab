@@ -103,4 +103,8 @@ public class Block extends ArkanoidObject {
 		return true;
 	}
 	
+	public static void resetColor() {
+		colorIndex = 1;
+	}
+	
 }

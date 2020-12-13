@@ -56,6 +56,8 @@ public class Arkanoid extends GraphicsProgram {
 	/** Delay between iterations */
 	private static final int DELAY = 5;
 	
+	private static final int LEVELS_NUMBER = 3;
+	
 	
 	/** Ball currently in game */
 	private Bead bead;
@@ -80,14 +82,16 @@ public class Arkanoid extends GraphicsProgram {
 	/** Current state of the game */
 	private int gameState;
 	
+	/** Current block formation */
+	private int currentLevel;
+	
 	/** Intitalizes game components */
 	public void init() {
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		gameState = START;
-		soundtrack = new SoundClip("sounds/soundtrack.wav");
-		soundtrack.setVolume(0.005);
-		soundtrack.loop();
+		startMusic();
 		addMouseListeners();
+		currentLevel = 1;
 		newGame();
 	}
 	
@@ -96,6 +100,7 @@ public class Arkanoid extends GraphicsProgram {
 	 */
 	public void newGame() {
 		removeAll();
+		add(new Background());
 		addBlocks();
 		addPaddle();
 		addHealthBar();
@@ -136,8 +141,7 @@ public class Arkanoid extends GraphicsProgram {
 		}
 		else if(gameState == END_SCREEN) {
 			remove(endWindow);
-			soundtrack.loop();
-			soundtrack.setVolume(0.005);
+			startMusic();
 			gameState = START;
 			newGame();
 		}
@@ -188,6 +192,7 @@ public class Arkanoid extends GraphicsProgram {
 		bead = new Bead(WINDOW_WIDTH / 2 - BEAD_RADIUS, WINDOW_HEIGHT / 2 - BEAD_RADIUS, BEAD_RADIUS, this);
 		add(bead);
 		bead.sendToBack();
+		bead.sendForward();
 	}
 	
 	/**
@@ -204,13 +209,69 @@ public class Arkanoid extends GraphicsProgram {
 	 */
 	private void addBlocks() {
 		blocksCount = 0;
-		for(int i = 0; i < BRICK_ROWS; i++) {
-			for(int j = 0; j < BRICKS_PER_ROW; j++) {
-				add(new Block(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET + i * BRICK_WIDTH, BRICK_Y_OFFSET + j * BRICK_HEIGHT);
+		drawBlocks(currentLevel);
+	}
+	
+	/**
+	 * Draws different block patterns
+	 * 
+	 * @param level - Current level
+	 */
+	private void drawBlocks(int level) {
+		Block.resetColor();
+		switch(level) {
+		case 1:
+			for(int i = 0; i < BRICK_ROWS; i++) {
+				for(int j = 0; j < BRICKS_PER_ROW; j++) {
+					add(new Block(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET + i * BRICK_WIDTH, BRICK_Y_OFFSET + j * BRICK_HEIGHT);
+					blocksCount++;
+				}
+				add(new ArmoredBlock(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET + i * BRICK_WIDTH, BRICK_Y_OFFSET + BRICKS_PER_ROW * BRICK_HEIGHT);
 				blocksCount++;
 			}
-			add(new ArmoredBlock(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET + i * BRICK_WIDTH, BRICK_Y_OFFSET + BRICKS_PER_ROW * BRICK_HEIGHT);
-			blocksCount++;
+			break;
+		case 2:
+			for(int i = 0; i < BRICK_ROWS + 1; i++) {
+				if(i % 2 == 0) {
+					for(int j = 0; j < BRICKS_PER_ROW; j += 4) {
+						add(new Block(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET / 2 + i * BRICK_WIDTH, BRICK_Y_OFFSET + j * BRICK_HEIGHT);
+						add(new Block(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET / 2 + i * BRICK_WIDTH, BRICK_HEIGHT + BRICK_Y_OFFSET + j * BRICK_HEIGHT);
+						add(new ArmoredBlock(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET / 2 + i * BRICK_WIDTH, BRICK_HEIGHT * 2 + BRICK_Y_OFFSET + j * BRICK_HEIGHT);
+						blocksCount += 3;
+					}
+				}
+				else {
+					for(int j = 2; j < BRICKS_PER_ROW; j += 4) {
+						add(new Block(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET / 2 + i * BRICK_WIDTH, BRICK_Y_OFFSET + j * BRICK_HEIGHT);
+						add(new Block(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET / 2 + i * BRICK_WIDTH, BRICK_HEIGHT + BRICK_Y_OFFSET + j * BRICK_HEIGHT);
+						add(new ArmoredBlock(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET / 2 + i * BRICK_WIDTH, BRICK_HEIGHT * 2 + BRICK_Y_OFFSET + j * BRICK_HEIGHT);
+						blocksCount += 3;
+					}
+				}
+			}
+			break;
+		case 3:
+			for(int j = 0; j < BRICKS_PER_ROW + 2; j++) {
+				add(new ArmoredBlock(BRICK_WIDTH, BRICK_HEIGHT), 0, BRICK_Y_OFFSET - BRICK_HEIGHT + j * BRICK_HEIGHT);
+				add(new ArmoredBlock(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET + BRICK_ROWS * BRICK_WIDTH, BRICK_Y_OFFSET - BRICK_HEIGHT + j * BRICK_HEIGHT);
+				blocksCount += 2;
+			}
+			for(int i = 0; i < BRICK_ROWS; i++) {
+				add(new ArmoredBlock(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET + i * BRICK_WIDTH, BRICK_Y_OFFSET - BRICK_HEIGHT);
+				blocksCount++;
+				for(int j = 0; j < BRICKS_PER_ROW; j++) {
+					add(new Block(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET + i * BRICK_WIDTH, BRICK_Y_OFFSET + j * BRICK_HEIGHT);
+					blocksCount++;
+				}
+				add(new ArmoredBlock(BRICK_WIDTH, BRICK_HEIGHT), BRICK_X_OFFSET + i * BRICK_WIDTH, BRICK_Y_OFFSET + BRICKS_PER_ROW * BRICK_HEIGHT);
+				blocksCount++;
+			}
+		}		
+	}
+	
+	private void nextLevel() {
+		if(++currentLevel > LEVELS_NUMBER) {
+			currentLevel = 1;
 		}
 	}
 	
@@ -235,6 +296,7 @@ public class Arkanoid extends GraphicsProgram {
 		if(blocksCount == 0) {
 			playVictory();
 			gameState = END_SCREEN;
+			nextLevel();
 			showEndScreen("Ви перемогли!");
 		}
 	}
@@ -269,6 +331,12 @@ public class Arkanoid extends GraphicsProgram {
 			gameState = END_SCREEN;
 			showEndScreen("Ви програли!");
 		}
+	}
+	
+	private void startMusic() {
+		soundtrack = new SoundClip("sounds/soundtrack.wav");
+		soundtrack.setVolume(0.005);
+		soundtrack.loop();
 	}
 	
 	/**
