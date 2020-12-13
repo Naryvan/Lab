@@ -47,17 +47,21 @@ public class Arkanoid extends GraphicsProgram {
 	//Radius of bead
 	private static final int BEAD_RADIUS = 7;
 
+	private static final int BONUS_DURATION = 10;
+	
 	private static final int DELAY = 5;
 	
 	
 	private Bead bead;
 	private Paddle paddle;
-	private HealthBar healthBar;
+	public HealthBar healthBar;
+	private Bonus bonus;
 	
 	private GCompound startWindow;
 	private GCompound endWindow;
 	
 	private int blocksCount;
+	private int blocksAtStartOfBonus;
 	
 	private int gameState;
 	
@@ -85,6 +89,7 @@ public class Arkanoid extends GraphicsProgram {
 				if(bead != null) {
 					checkForCollisions();
 					moveBead();
+					processBonus();
 				}
 				else {
 					addBead();
@@ -104,6 +109,7 @@ public class Arkanoid extends GraphicsProgram {
 			return;
 		}
 		else if(gameState == BEAD_APPEARED) {
+			addBonus();
 			gameState = BEAD_MOVES;
 		}
 		else if(gameState == END_SCREEN) {
@@ -124,16 +130,17 @@ public class Arkanoid extends GraphicsProgram {
 			return;
 		if (bead.bounceIfCollidesWithWorldBounds())
 			return;
-		ArkanoidObject collidedObject = (ArkanoidObject) bead.collidesWith();
-		if(collidedObject != null && collidedObject.getType() == BLOCK) {
-			bead.bounceFromRectangle(((Block)collidedObject).getRect());
-			if(((Block)collidedObject).tryToDestroy()) {
-				destroyBlock(collidedObject);
-				remove(collidedObject);
+		if (!(bead.collidesWith() instanceof Bonus)) {
+			ArkanoidObject collidedObject = (ArkanoidObject) bead.collidesWith();
+			if(collidedObject != null && collidedObject.getType() == BLOCK) {
+				bead.bounceFromRectangle(((Block)collidedObject).getRect());
+				if(((Block)collidedObject).tryToDestroy()) {
+					destroyBlock(collidedObject);
+					remove(collidedObject);
+				}
+				return;
 			}
-			return;
 		}
-		
 		bead.bounceIfCollidesWithWorldBounds();
 	}
 	
@@ -170,6 +177,37 @@ public class Arkanoid extends GraphicsProgram {
 		healthBar = new HealthBar(BEAD_RADIUS);
 		healthBar.setLocation(BEAD_RADIUS * 2, WINDOW_HEIGHT - BEAD_RADIUS * 4);
 		add(healthBar);
+	}
+	
+	private void addBonus() {
+		bonus = new Bonus(BEAD_RADIUS, paddle, bead, this);
+	}
+	
+	private void processBonus() {
+		if (!bonus.bonusActive && !bonus.bonusFalling) {
+			bonus.addBonus();
+		} else if (bonus.bonusFalling) {
+			bonus.moveBonus();
+			if (bonus.checkForCollisionsWithPaddle()) {
+				initBonusCounter();
+			}
+			bonus.checkForOutOfBounds();
+		} else if (bonus.bonusActive) {
+			if (!countBlocksForBonus()) {
+				bonus.desactivateBonus();
+			}
+		}
+	}
+	
+	private void initBonusCounter() {
+		blocksAtStartOfBonus = blocksCount;
+	}
+	
+	private boolean countBlocksForBonus() {
+		if (blocksAtStartOfBonus - BONUS_DURATION > blocksCount) {
+			return true;
+		}
+		return false;
 	}
 	
 	private void destroyBlock(ArkanoidObject block) {

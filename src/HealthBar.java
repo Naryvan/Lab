@@ -7,7 +7,7 @@ public class HealthBar extends ArkanoidObject {
 	GOval firstLife;
 	GOval secondLife;
 	GOval thirdLife;
-	GOval fourthLife;
+	GOval bonusLife;
 	
 	int livesLeft;
 	
@@ -25,57 +25,75 @@ public class HealthBar extends ArkanoidObject {
 		thirdLife.setFilled(true);
 		thirdLife.setFillColor(new Color(26, 10, 51));
 		
-		fourthLife = new GOval(radius * 12, 0, radius * 2, radius * 2);
-		fourthLife.setFilled(true);
-		fourthLife.setFillColor(new Color(26, 10, 51));
-		
 		add(firstLife);
 		add(secondLife);
 		add(thirdLife);
-		add(fourthLife);
 		
 		livesLeft = 3;
 	}
 	
 	public boolean removeLife() {
-		switch(livesLeft) {
-		case 3:
-			livesLeft--;
-			remove(thirdLife);
-			return false;
-		case 2:
-			livesLeft--;
-			remove(secondLife);
-			return false;
-		case 1:
-			livesLeft--;
-			remove(firstLife);
-			return false;
-		default:
-			return true;
+		if (bonusLife != null ) {
+			removeBonusLife();
+			if (livesLeft == 0)
+				return true;
+			else return false;
+		} else {
+			switch(livesLeft) {
+			case 3:
+				livesLeft--;
+				remove(thirdLife);
+				return false;
+			case 2:
+				livesLeft--;
+				remove(secondLife);
+				return false;
+			case 1:
+				livesLeft--;
+				remove(firstLife);
+				return false;
+			default:
+				return true;
+			}
 		}
 	}
 	
-	public void addLife() {
-		switch(livesLeft) {
-		case 3:
+//	public void addLife() {
+//		switch(livesLeft) {
+//		case 3:
+//			livesLeft++;
+//			add(bonusLife);
+//			return;
+//		case 2:
+//			livesLeft++;
+//			add(thirdLife);
+//			return;
+//		case 1:
+//			livesLeft++;
+//			add(secondLife);
+//			return;
+//		case 0:
+//			livesLeft++;
+//			add(firstLife);
+//		default:
+//			return;
+//		}
+//	}
+	
+	public void addBonusLife(int radius) {
+		if (bonusLife == null) {
 			livesLeft++;
-			add(fourthLife);
-			return;
-		case 2:
-			livesLeft++;
-			add(thirdLife);
-			return;
-		case 1:
-			livesLeft++;
-			add(secondLife);
-			return;
-		case 0:
-			livesLeft++;
-			add(firstLife);
-		default:
-			return;
+			bonusLife = new GOval(radius * 12, 0, radius * 2, radius * 2);
+			bonusLife.setFilled(true);
+			bonusLife.setFillColor(new Color(123, 0, 255));
+			add(bonusLife);
 		}
+	}
+	
+	public void removeBonusLife() {
+		remove(bonusLife);
+		bonusLife = null;
+		livesLeft--;
 	}
 	
 }

@@ -9,16 +9,13 @@ import acm.util.SoundClip;
 public class Bead extends ArkanoidObject {
 	
 	private int currentAngle;
-	private double speedModulus;
+	public double speedModulus = 4;
 	private final int COLLISIONS_DETECTION_PRECISION = 180; // represents the number of points which will be 
 	// considered while detecting collisions with other objects. SHOULD BE A DIVISOR OF 360
 	private Arkanoid window;
 	
 	private final int WORLD_WIDHT;
 	private final int WORLD_HEIGHT;
-	
-	private final static int SPEED_MODULUS_LOWER_BOUND = 3;
-	private final static int SPEED_MODULUS_UPPER_BOUND = 5;
 
 	public Bead(int xCoord, int yCoord, int radius, Arkanoid window) {
 		super(Arkanoid.BEAD);
@@ -30,7 +27,6 @@ public class Bead extends ArkanoidObject {
 		bead.setFillColor(new Color(26, 10, 51));
 		add(bead);
 		RandomGenerator gen = RandomGenerator.getInstance();
-		speedModulus = gen.nextInt(SPEED_MODULUS_LOWER_BOUND, SPEED_MODULUS_UPPER_BOUND);
 		currentAngle = (gen.nextInt(-135, -45));
 		this.setLocation(xCoord, yCoord);
 	}

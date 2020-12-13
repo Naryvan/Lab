@@ -1,0 +1,6 @@
+
+public enum BonusType {
+	BONUS_LIFE,
+	BEAD_ACCELERATE,
+	BEAD_DECELERATE;
+}
