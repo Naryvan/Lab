@@ -90,7 +90,7 @@ public class Bead extends ArkanoidObject {
 			// minus here because of Y-inverted java coordinates system
 			GObject objectCollided = window.getElementAt(xCenter + currentXprocessed + 1,
 					yCenter + currentYprocessed + 1);
-			if (objectCollided != null)
+			if (objectCollided != null && !(objectCollided instanceof GOval))
 				return (ArkanoidObject)objectCollided;
 		}
 		
