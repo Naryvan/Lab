@@ -16,7 +16,7 @@ public class Bead extends ArkanoidObject {
 	private final int WORLD_WIDHT;
 	private final int WORLD_HEIGHT;
 	
-	private final static int SPEED_MODULUS_LOWER_BOUND = 4;
+	private final static int SPEED_MODULUS_LOWER_BOUND = 3;
 	private final static int SPEED_MODULUS_UPPER_BOUND = 5;
 
 	public Bead(int xCoord, int yCoord, int radius, Arkanoid window) {
@@ -84,7 +84,7 @@ public class Bead extends ArkanoidObject {
 			}
 		}
 		for (int y = yCoord; y <= yCoord + (int)rect.getHeight(); y++) {
-			if (this.contains(xCoord, y) || this.contains(xCoord + (int)rect.getWidth(), y)) {
+			if (this.contains(xCoord, y) || this.contains(xCoord + (int)rect.getWidth() - 1, y)) {
 				collidesWidthVerticalBound = true;
 			}
 		}
@@ -102,11 +102,11 @@ public class Bead extends ArkanoidObject {
 	}
 	
 	public boolean bounceIfCollidesWithWorldBounds() {
-		if (getX() + getWidth() > WORLD_WIDHT || getX() < 0) {
+		if (getX() + getWidth() >= WORLD_WIDHT || getX() <= 0) {
 			currentAngle = currentAngle > 0 ? 180 - currentAngle : -180 - currentAngle;
 			return true;
 		}
-		if (getY() < 0){
+		if (getY() <= 0){
 			currentAngle = -currentAngle;
 			return true;
 		}

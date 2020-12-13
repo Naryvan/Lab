@@ -71,8 +71,8 @@ public class Arkanoid extends GraphicsProgram {
 		while(true) {
 			if(gameState == BEAD_MOVES) {
 				if(bead != null) {
-					bead.moveBead();
 					checkForCollisions();
+					bead.moveBead();
 				}
 				else if(livesCount != 0) {
 					addBead();
