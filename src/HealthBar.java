@@ -25,13 +25,14 @@ public class HealthBar extends ArkanoidObject {
 		thirdLife.setFilled(true);
 		thirdLife.setFillColor(new Color(26, 10, 51));
 		
-		fourthLife = new GOval(radius * 8, 0, radius * 2, radius * 2);
+		fourthLife = new GOval(radius * 12, 0, radius * 2, radius * 2);
 		fourthLife.setFilled(true);
 		fourthLife.setFillColor(new Color(26, 10, 51));
 		
 		add(firstLife);
 		add(secondLife);
 		add(thirdLife);
+		add(fourthLife);
 		
 		livesLeft = 3;
 	}
