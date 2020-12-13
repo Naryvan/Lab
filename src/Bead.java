@@ -9,17 +9,15 @@ public class Bead extends ArkanoidObject {
 	
 	private int currentAngle;
 	private double speedModulus;
-	private double deltaX; // speed of the bead relatively to the X axis (left to right)
-	private double deltaY; // speed of the bead relatively to the Y axis (up to down)
-	private final int COLLISIONS_DETECTION_PRECISION = 60; // represents the number of points which will be 
+	private final int COLLISIONS_DETECTION_PRECISION = 180; // represents the number of points which will be 
 	// considered while detecting collisions with other objects. SHOULD BE A DIVISOR OF 360
 	private Arkanoid window;
 	
 	private final int WORLD_WIDHT;
 	private final int WORLD_HEIGHT;
 	
-	private final static int SPEED_MODULUS_LOWER_BOUND = 2;
-	private final static int SPEED_MODULUS_UPPER_BOUND = 3;
+	private final static int SPEED_MODULUS_LOWER_BOUND = 4;
+	private final static int SPEED_MODULUS_UPPER_BOUND = 5;
 
 	public Bead(int xCoord, int yCoord, int radius, Arkanoid window) {
 		super(Arkanoid.BEAD);
@@ -46,8 +44,8 @@ public class Bead extends ArkanoidObject {
 		
 		for (int i = 0; i < COLLISIONS_DETECTION_PRECISION; i++) {
 			int currentAngleProcessed = (int)(360 / COLLISIONS_DETECTION_PRECISION * i);
-			int currentXprocessed = (int)(GMath.cosDegrees(currentAngleProcessed) * getWidth() / 2);
-			int currentYprocessed = -(int)(GMath.sinDegrees(currentAngleProcessed) * getHeight() / 2);
+			int currentXprocessed = (int)(Math.cos(Math.toRadians(currentAngleProcessed)) * getWidth() / 2);
+			int currentYprocessed = -(int)(Math.sin(Math.toRadians(currentAngleProcessed)) * getHeight() / 2);
 			// minus here because of Y-inverted java coordinates system
 			if (window.getElementAt(xCenter + currentXprocessed, yCenter + currentYprocessed) == anotherObject)
 				return true;
@@ -61,8 +59,9 @@ public class Bead extends ArkanoidObject {
 		
 		for (int i = 0; i < COLLISIONS_DETECTION_PRECISION; i++) {
 			int currentAngleProcessed = (int)(360 / COLLISIONS_DETECTION_PRECISION * i);
-			int currentXprocessed = (int)(GMath.cosDegrees(currentAngleProcessed) * (getWidth() / 2 - 1));
-			int currentYprocessed = -(int)(GMath.sinDegrees(currentAngleProcessed) * (getHeight() / 2 - 1));
+
+			int currentXprocessed = (int)(Math.cos(Math.toRadians(currentAngleProcessed)) * getWidth() / 2);
+			int currentYprocessed = -(int)(Math.sin(Math.toRadians(currentAngleProcessed)) * getHeight() / 2);
 			// minus here because of Y-inverted java coordinates system
 			GObject objectCollided = window.getElementAt(xCenter + currentXprocessed + 1,
 					yCenter + currentYprocessed + 1);
@@ -91,7 +90,10 @@ public class Bead extends ArkanoidObject {
 			}
 		}
 		
-		if (collidesWidthVerticalBound) {
+		
+		if (collidesWidthHorizontalBound && collidesWidthVerticalBound) {
+			currentAngle = currentAngle > 0 ? currentAngle - 180 : currentAngle + 180;
+		} else if (collidesWidthVerticalBound) {
 			currentAngle = currentAngle > 0 ? 180 - currentAngle : -180 - currentAngle;
 		} else if (collidesWidthHorizontalBound) {
 			currentAngle = -currentAngle;
@@ -110,6 +112,7 @@ public class Bead extends ArkanoidObject {
 			return true;
 		}
 		if (getY() + getHeight() > WORLD_HEIGHT) {
+			//currentAngle = RandomGenerator.getInstance().nextInt(20, 160);
 			window.processGameOver();
 			return true;
 		}

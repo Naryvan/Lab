@@ -33,19 +33,19 @@ public class Block extends ArkanoidObject {
 		
 		switch(colorIndex) {
 		case 1:
-			color = Color.RED;
+			color = new Color(88, 61, 114);
 			break;
 		case 2:
-			color = Color.GREEN;
+			color = new Color(159, 95, 128);
 			break;
 		case 3: 
-			color = Color.BLUE;
+			color = new Color(255, 186, 147);
 			break;
 		case 4:
-			color = Color.ORANGE;
+			color = new Color(255, 142, 113);
 			break;
 		default: 
-			color = Color.RED;
+			color = new Color(88, 61, 114);
 			break;
 		}
 		
