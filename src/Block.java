@@ -58,9 +58,13 @@ public class Block extends ArkanoidObject {
 	}
 	
 	public GRect getRect() {
-		GRect rect = new GRect(width, height, getX(), getY());
+		GRect rect = new GRect(getX(), getY(), getWidth(), getHeight());
 		rect.setFilled(true);
 		return rect;
 	}	
+	
+	public boolean tryToDestroy() {
+		return true;
+	}
 	
 }

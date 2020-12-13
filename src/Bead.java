@@ -59,6 +59,7 @@ public class Bead extends ArkanoidObject {
 		
 		for (int i = 0; i < COLLISIONS_DETECTION_PRECISION; i++) {
 			int currentAngleProcessed = (int)(360 / COLLISIONS_DETECTION_PRECISION * i);
+
 			int currentXprocessed = (int)(Math.cos(Math.toRadians(currentAngleProcessed)) * getWidth() / 2);
 			int currentYprocessed = -(int)(Math.sin(Math.toRadians(currentAngleProcessed)) * getHeight() / 2);
 			// minus here because of Y-inverted java coordinates system
