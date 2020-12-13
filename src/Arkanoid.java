@@ -18,6 +18,8 @@ public class Arkanoid extends GraphicsProgram {
 	public static final int END_SCREEN = 4;
 	
 	
+	private SoundClip soundtrack;
+	
 	//Window dimensions
 	public static final int WINDOW_WIDTH = 600;
 	public static final int WINDOW_HEIGHT = 800;
@@ -62,6 +64,9 @@ public class Arkanoid extends GraphicsProgram {
 	public void init() {
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		gameState = START;
+		soundtrack = new SoundClip("sounds/soundtrack.wav");
+		soundtrack.setVolume(0.005);
+		soundtrack.loop();
 		newGame();
 		addMouseListeners();
 	}
@@ -79,7 +84,7 @@ public class Arkanoid extends GraphicsProgram {
 			if(gameState == BEAD_MOVES) {
 				if(bead != null) {
 					checkForCollisions();
-					bead.moveBead();
+					moveBead();
 				}
 				else {
 					addBead();
@@ -93,6 +98,7 @@ public class Arkanoid extends GraphicsProgram {
 	public void mouseClicked(MouseEvent e) {
 		if(gameState == START) {
 			remove(startWindow);
+			soundtrack.setVolume(0.01);
 			addBead();
 			gameState = BEAD_APPEARED;
 			return;
@@ -142,6 +148,12 @@ public class Arkanoid extends GraphicsProgram {
 		bead.sendToBack();
 	}
 	
+	private void moveBead() {
+		if(bead != null) {
+			bead.moveBead();
+		}
+	}
+	
 	private void addBlocks() {
 		blocksCount = 0;
 		for(int i = 0; i < BRICK_ROWS; i++) {
@@ -163,7 +175,9 @@ public class Arkanoid extends GraphicsProgram {
 	private void destroyBlock(ArkanoidObject block) {
 		remove(block);
 		blocksCount--;
+		
 		if(blocksCount == 0) {
+			playVictory();
 			gameState = END_SCREEN;
 			showEndScreen("Ви перемогли!");
 		}
@@ -175,6 +189,7 @@ public class Arkanoid extends GraphicsProgram {
 	}
 	
 	private void showEndScreen(String message) {
+		soundtrack.setVolume(0.005);
 		endWindow = new EndWindow(WINDOW_WIDTH / 2, WINDOW_WIDTH / 4, WINDOW_HEIGHT / 2 - WINDOW_HEIGHT / 8, message);
 		add(endWindow);
 	}
@@ -183,9 +198,22 @@ public class Arkanoid extends GraphicsProgram {
 		remove(bead);
 		bead = null;
 		if(healthBar.removeLife()) {
+			playLose();
 			gameState = END_SCREEN;
 			showEndScreen("Ви програли!");
 		}
+	}
+	
+	private void playVictory() {
+		SoundClip bounceSound = new SoundClip("sounds/victory.wav");
+		bounceSound.setVolume(0.1);
+		bounceSound.play();
+	}
+	
+	private void playLose() {
+		SoundClip bounceSound = new SoundClip("sounds/lose.wav");
+		bounceSound.setVolume(0.1);
+		bounceSound.play();
 	}
 	
 }

@@ -4,6 +4,7 @@ import javax.xml.crypto.XMLCryptoContext;
 import acm.graphics.*;
 import acm.program.GraphicsProgram;
 import acm.util.RandomGenerator;
+import acm.util.SoundClip;
 
 public class Bead extends ArkanoidObject {
 	
@@ -74,6 +75,8 @@ public class Bead extends ArkanoidObject {
 	
 	
 	public boolean bounceFromRectangle(GRect rect) {
+		playBounceFromBlock();
+		
 		boolean collidesWidthHorizontalBound = false;
 		boolean collidesWidthVerticalBound = false;
 		
@@ -105,14 +108,17 @@ public class Bead extends ArkanoidObject {
 	public boolean bounceIfCollidesWithWorldBounds() {
 		if (getX() + getWidth() >= WORLD_WIDHT || getX() <= 0) {
 			currentAngle = currentAngle > 0 ? 180 - currentAngle : -180 - currentAngle;
+			BounceFromWall();
 			return true;
 		}
 		if (getY() <= 0){
 			currentAngle = -currentAngle;
+			BounceFromWall();
 			return true;
 		}
 		if (getY() + getHeight() > WORLD_HEIGHT) {
 			//currentAngle = RandomGenerator.getInstance().nextInt(20, 160);
+			playFallOutOfBounds();
 			window.processGameOver();
 			return true;
 		}
@@ -122,6 +128,7 @@ public class Bead extends ArkanoidObject {
 	public boolean bounceFromPaddleIfCollides(Paddle paddle) {
 		int width = (int)paddle.getWidth();
 		if (this.collidesWith(paddle)) {
+			playBounceFromPaddle();
 			for (int i = 1; i <= 6; i++) {
 				for (int j = ((int)(width / 6)) * (i - 1); j < ((int)(width / 6)) * i; j++) {
 					if (this.contains(paddle.getX() + j, paddle.getY()) || 
@@ -136,4 +143,28 @@ public class Bead extends ArkanoidObject {
 		return false;
 	}
 
+	private void playBounceFromBlock() {
+		SoundClip bounceSound = new SoundClip("sounds/bounce_from_block.wav");
+		bounceSound.setVolume(0.1);
+		bounceSound.play();
+	}
+	
+	private void playBounceFromPaddle() {
+		SoundClip bounceSound = new SoundClip("sounds/bounce_from_paddle.wav");
+		bounceSound.setVolume(0.1);
+		bounceSound.play();
+	}
+	
+	private void BounceFromWall() {
+		SoundClip bounceSound = new SoundClip("sounds/bounce_from_wall.wav");
+		bounceSound.setVolume(0.01);
+		bounceSound.play();
+	}
+	
+	private void playFallOutOfBounds() {
+		SoundClip bounceSound = new SoundClip("sounds/fall_out_of_bounds.wav");
+		bounceSound.setVolume(0.1);
+		bounceSound.play();
+	}
+	
 }

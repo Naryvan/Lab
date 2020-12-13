@@ -33,15 +33,19 @@ public class Block extends ArkanoidObject {
 		
 		switch(colorIndex) {
 		case 1:
+		case 2:
 			color = new Color(88, 61, 114);
 			break;
-		case 2:
+		case 3:
+		case 4:
 			color = new Color(159, 95, 128);
 			break;
-		case 3: 
+		case 5:
+		case 6:
 			color = new Color(255, 186, 147);
 			break;
-		case 4:
+		case 7:
+		case 8:
 			color = new Color(255, 142, 113);
 			break;
 		default: 
@@ -50,7 +54,7 @@ public class Block extends ArkanoidObject {
 		}
 		
 		colorIndex++;
-		if(colorIndex > 4) {
+		if(colorIndex > 8) {
 			colorIndex = 1;
 		}
 		

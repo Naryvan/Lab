@@ -7,6 +7,7 @@ public class HealthBar extends ArkanoidObject {
 	GOval firstLife;
 	GOval secondLife;
 	GOval thirdLife;
+	GOval fourthLife;
 	
 	int livesLeft;
 	
@@ -23,6 +24,10 @@ public class HealthBar extends ArkanoidObject {
 		thirdLife = new GOval(radius * 8, 0, radius * 2, radius * 2);
 		thirdLife.setFilled(true);
 		thirdLife.setFillColor(new Color(26, 10, 51));
+		
+		fourthLife = new GOval(radius * 8, 0, radius * 2, radius * 2);
+		fourthLife.setFilled(true);
+		fourthLife.setFillColor(new Color(26, 10, 51));
 		
 		add(firstLife);
 		add(secondLife);
@@ -47,6 +52,28 @@ public class HealthBar extends ArkanoidObject {
 			return false;
 		default:
 			return true;
+		}
+	}
+	
+	public void addLife() {
+		switch(livesLeft) {
+		case 3:
+			livesLeft++;
+			add(fourthLife);
+			return;
+		case 2:
+			livesLeft++;
+			add(thirdLife);
+			return;
+		case 1:
+			livesLeft++;
+			add(secondLife);
+			return;
+		case 0:
+			livesLeft++;
+			add(firstLife);
+		default:
+			return;
 		}
 	}
 	
