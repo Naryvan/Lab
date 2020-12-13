@@ -1,3 +1,9 @@
+/*
+ * File: Bead.java
+ * 
+ * Ball, that interacts with game enviroment 
+ */
+
 import java.awt.Color;
 import java.util.Random;
 import javax.xml.crypto.XMLCryptoContext;
@@ -8,12 +14,20 @@ import acm.util.SoundClip;
 
 public class Bead extends ArkanoidObject {
 	
+	/** Current direction of bead */
 	private int currentAngle;
+	
+	/** Speed of the beed */
 	private double speedModulus;
-	private final int COLLISIONS_DETECTION_PRECISION = 180; // represents the number of points which will be 
-	// considered while detecting collisions with other objects. SHOULD BE A DIVISOR OF 360
+	
+	/** represents the number of points which will be 
+        considered while detecting collisions with other objects. SHOULD BE A DIVISOR OF 360 */
+	private final int COLLISIONS_DETECTION_PRECISION = 180; 
+	
+	/** Game window */
 	private Arkanoid window;
 	
+	/** Window dimensions */
 	private final int WORLD_WIDHT;
 	private final int WORLD_HEIGHT;
 	
@@ -35,10 +49,19 @@ public class Bead extends ArkanoidObject {
 		this.setLocation(xCoord, yCoord);
 	}
 	
+	/**
+	 * Moves bead accordint to its speed and angle
+	 */
 	public void moveBead() {
 		this.movePolar(speedModulus, currentAngle);
 	}
 	
+	/**
+	 * Checks for collision with some object
+	 * 
+	 * @param anotherObject - object to check collision with
+	 * @return true if collides, false if not
+	 */
 	public boolean collidesWith(GObject anotherObject) {
 		int xCenter = ((int)getX() + (int)(getWidth() / 2));
 		int yCenter = ((int)getY() + (int)(getHeight() / 2));
@@ -54,6 +77,11 @@ public class Bead extends ArkanoidObject {
 		return false;
 	}
 	
+	/**
+	 * Checks for objects that ball collides with
+	 * 
+	 * @return object that ball collides with
+	 */
 	public ArkanoidObject collidesWith() {
 		int xCenter = ((int)getX() + (int)(getWidth() / 2));
 		int yCenter = ((int)getY() + (int)(getHeight() / 2));
@@ -73,7 +101,12 @@ public class Bead extends ArkanoidObject {
 		return null;
 	}
 	
-	
+	/**
+	 * Changes angle of the bead depending on relation to rectangle
+	 * 
+	 * @param rect - rectangle to bounce fron
+	 * @return true if bounced, false if not
+	 */
 	public boolean bounceFromRectangle(GRect rect) {
 		playBounceFromBlock();
 		
@@ -105,6 +138,12 @@ public class Bead extends ArkanoidObject {
 		return false;
 	}
 	
+	/**
+	 * Checks for collision with world bounds
+	 * If collides - changes bead's angle accordingly
+	 * 
+	 * @return true if bounced, false if not
+	 */
 	public boolean bounceIfCollidesWithWorldBounds() {
 		if (getX() + getWidth() >= WORLD_WIDHT || getX() <= 0) {
 			currentAngle = currentAngle > 0 ? 180 - currentAngle : -180 - currentAngle;
@@ -125,6 +164,13 @@ public class Bead extends ArkanoidObject {
 		return false;
 	}
 	
+	/**
+	 * Checks for collision with paddle
+	 * If collides - changes bead's angle accordingly
+	 * 
+	 * @param paddle - paddle to check collision with
+	 * @return true if bounced, false if not
+	 */
 	public boolean bounceFromPaddleIfCollides(Paddle paddle) {
 		int width = (int)paddle.getWidth();
 		if (this.collidesWith(paddle)) {
@@ -143,24 +189,36 @@ public class Bead extends ArkanoidObject {
 		return false;
 	}
 
+	/**
+	 * Plays bounce from block sound
+	 */
 	private void playBounceFromBlock() {
 		SoundClip bounceSound = new SoundClip("sounds/bounce_from_block.wav");
 		bounceSound.setVolume(0.1);
 		bounceSound.play();
 	}
 	
+	/**
+	 * Plays bounce form paddle sound
+	 */
 	private void playBounceFromPaddle() {
 		SoundClip bounceSound = new SoundClip("sounds/bounce_from_paddle.wav");
 		bounceSound.setVolume(0.1);
 		bounceSound.play();
 	}
 	
+	/**
+	 * Plays bounce fron wall sound
+	 */
 	private void BounceFromWall() {
 		SoundClip bounceSound = new SoundClip("sounds/bounce_from_wall.wav");
 		bounceSound.setVolume(0.01);
 		bounceSound.play();
 	}
 	
+	/**
+	 * Plays fall out of bounds sound
+	 */
 	private void playFallOutOfBounds() {
 		SoundClip bounceSound = new SoundClip("sounds/fall_out_of_bounds.wav");
 		bounceSound.setVolume(0.1);

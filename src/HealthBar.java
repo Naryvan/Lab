@@ -1,14 +1,22 @@
+/*
+ * File: HealthBar
+ * 
+ * Shows how much additional balls player has 
+ */
+
 import java.awt.Color;
 
 import acm.graphics.*;
 
 public class HealthBar extends ArkanoidObject {
 	
+	/** Visual representations of lives */
 	GOval firstLife;
 	GOval secondLife;
 	GOval thirdLife;
 	GOval fourthLife;
 	
+	/** Nummber of additional balls player has */
 	int livesLeft;
 	
 	public HealthBar(int radius) {
@@ -32,11 +40,16 @@ public class HealthBar extends ArkanoidObject {
 		add(firstLife);
 		add(secondLife);
 		add(thirdLife);
-		add(fourthLife);
 		
 		livesLeft = 3;
 	}
 	
+	/**
+	 * Decreases aditional balls by one
+	 * If no balls left - returns true
+	 * 
+	 * @return true if no balls left, else false
+	 */
 	public boolean removeLife() {
 		switch(livesLeft) {
 		case 3:
@@ -56,6 +69,9 @@ public class HealthBar extends ArkanoidObject {
 		}
 	}
 	
+	/**
+	 * Adds aditional ball, max - 4
+	 */
 	public void addLife() {
 		switch(livesLeft) {
 		case 3:

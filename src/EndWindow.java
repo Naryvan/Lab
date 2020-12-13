@@ -1,3 +1,9 @@
+/*
+ * File: EndWidnow.java
+ * 
+ * Wibdow, that displays message to the player at the end of the game
+ */
+
 import java.awt.Color;
 import acm.graphics.*;
 
