@@ -10,6 +10,7 @@ public class Arkanoid extends GraphicsProgram {
 	public static final int BLOCK = 2;
 	public static final int BONUS = 3;
 	public static final int BEAD = 4;
+	public static final int MISC = 5;
 	
 	public static final int START = 1;
 	public static final int BEAD_APPEARED = 2;
@@ -36,8 +37,6 @@ public class Arkanoid extends GraphicsProgram {
 	private static final int BRICK_WIDTH = WINDOW_WIDTH / (BRICK_ROWS + 2);
 	private static final int BRICK_HEIGHT = WINDOW_HEIGHT / BRICK_ROWS / 4;
 	
-	//private static final int BRICK_X_DISTANCE = 
-	
 	//Distance top brick row and top edge of window
 	private static final int BRICK_Y_OFFSET = 70;
 	
@@ -50,23 +49,28 @@ public class Arkanoid extends GraphicsProgram {
 	
 	
 	private Bead bead;
-	
 	private Paddle paddle;
+	private HealthBar healthBar;
 	
 	private GCompound startWindow;
+	private GCompound endWindow;
 	
 	private int blocksCount;
-	private int livesCount;
 	
 	private int gameState;
 	
 	public void init() {
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		gameState = START;
+		newGame();
+		addMouseListeners();
+	}
+	
+	public void newGame() {
+		removeAll();
 		addBlocks();
 		addPaddle();
-		addMouseListeners();
-		gameState = START;
-		livesCount = 3;
+		addHealthBar();
 		showStartScreen();
 	}
 	
@@ -77,7 +81,7 @@ public class Arkanoid extends GraphicsProgram {
 					bead.moveBead();
 					checkForCollisions();
 				}
-				else if(livesCount != 0) {
+				else {
 					addBead();
 					gameState = BEAD_APPEARED;
 				}
@@ -93,8 +97,13 @@ public class Arkanoid extends GraphicsProgram {
 			gameState = BEAD_APPEARED;
 			return;
 		}
-		if(gameState == BEAD_APPEARED) {
+		else if(gameState == BEAD_APPEARED) {
 			gameState = BEAD_MOVES;
+		}
+		else if(gameState == END_SCREEN) {
+			remove(endWindow);
+			gameState = START;
+			newGame();
 		}
 	}
 	
@@ -113,8 +122,8 @@ public class Arkanoid extends GraphicsProgram {
 		if(collidedObject != null && collidedObject.getType() == BLOCK) {
 			bead.bounceFromRectangle(((Block)collidedObject).getRect());
 			if(((Block)collidedObject).tryToDestroy()) {
+				destroyBlock(collidedObject);
 				remove(collidedObject);
-				blocksCount--;
 			}
 			return;
 		}
@@ -145,15 +154,38 @@ public class Arkanoid extends GraphicsProgram {
 		}
 	}
 	
+	private void addHealthBar() {
+		healthBar = new HealthBar(BEAD_RADIUS);
+		healthBar.setLocation(BEAD_RADIUS * 2, WINDOW_HEIGHT - BEAD_RADIUS * 4);
+		add(healthBar);
+	}
+	
+	private void destroyBlock(ArkanoidObject block) {
+		remove(block);
+		blocksCount--;
+		if(blocksCount == 0) {
+			gameState = END_SCREEN;
+			showEndScreen("Ви перемогли!");
+		}
+	}
+	
 	private void showStartScreen() {
-		startWindow = new StartWindow(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 3, WINDOW_WIDTH / 4, WINDOW_HEIGHT / 3);
+		startWindow = new StartWindow(WINDOW_WIDTH / 2, WINDOW_WIDTH / 4, WINDOW_HEIGHT / 3);
 		add(startWindow);
+	}
+	
+	private void showEndScreen(String message) {
+		endWindow = new EndWindow(WINDOW_WIDTH / 2, WINDOW_WIDTH / 4, WINDOW_HEIGHT / 2 - WINDOW_HEIGHT / 8, message);
+		add(endWindow);
 	}
 	
 	public void processGameOver() {
 		remove(bead);
 		bead = null;
-		livesCount--;
+		if(healthBar.removeLife()) {
+			gameState = END_SCREEN;
+			showEndScreen("Ви програли!");
+		}
 	}
 	
 }

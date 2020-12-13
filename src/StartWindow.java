@@ -3,7 +3,9 @@ import acm.graphics.*;
 
 public class StartWindow extends GCompound {
 
-	public StartWindow(int width, int height, int xPos, int yPos) {
+	public StartWindow(int width, int xPos, int yPos) {
+		int height = width;
+		
 		GRoundRect rect = new GRoundRect(0, 0, width, height, 10);
 		rect.setFilled(true);
 		rect.setFillColor(Color.WHITE);
